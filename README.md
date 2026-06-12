@@ -5,7 +5,8 @@ Pure HTML5 canvas + vanilla JavaScript — no build step, no dependencies.
 
 ## Play
 
-Open `index.html` in a browser (or serve the folder, e.g. `python3 -m http.server`).
+Open `index.html` in a browser — it is fully self-contained, so downloading
+that single file is enough.
 
 You command the blue empire against three AI rivals. Last empire standing wins.
 
@@ -31,11 +32,18 @@ You command the blue empire against three AI rivals. Last empire standing wins.
 
 ## Development
 
+The sources live in `css/` and `js/`; `dev.html` loads them directly for
+development. `index.html` is generated from them — after editing, rebuild it:
+
+```sh
+node build.js
+```
+
 The model (`js/model.js`, `js/ai.js`, `js/data.js`) is DOM-free and testable
 headless:
 
 ```sh
 node test/smoke.js                 # simulates full AI-vs-AI games
 npm install --no-save jsdom
-node test/ui.test.js               # drives the real UI in jsdom
+node test/ui.test.js               # rebuilds index.html and drives the UI in jsdom
 ```
