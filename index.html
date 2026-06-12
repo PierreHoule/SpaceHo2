@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SpaceHo! — a Spaceward Ho! tribute</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <h1>🤠 SpaceHo!</h1>
+    <div id="status"></div>
+    <button id="ho-button" title="End turn">Ho!</button>
+  </header>
+
+  <main>
+    <div id="map-wrap">
+      <canvas id="map"></canvas>
+      <div id="flash"></div>
+    </div>
+    <aside id="sidebar">
+      <section id="planet"></section>
+      <section id="tech"></section>
+      <section id="reports">
+        <h2>Reports</h2>
+        <div id="messages"></div>
+      </section>
+      <section id="help">
+        <h2>How to play</h2>
+        <p>Grow colonies, terraform worlds toward your ideal temperature, mine
+        metal, fund research, and build fleets. Send a colony ship to an
+        uninhabited star to settle it; send warships to bombard enemy worlds.
+        Eliminate every rival empire to win. Press <b>Ho!</b> to end your turn.</p>
+      </section>
+    </aside>
+  </main>
+
+  <div id="gameover">
+    <div class="panel">
+      <h1></h1>
+      <button id="new-game">New Game</button>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/model.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
