@@ -5,6 +5,9 @@
 const { JSDOM } = require('jsdom');
 const path = require('path');
 
+// Test the shipped single-file build, regenerating it from the sources first.
+require('../build.js').build();
+
 function stubCanvas(window) {
   const noop = () => {};
   const ctx = new Proxy({}, {
