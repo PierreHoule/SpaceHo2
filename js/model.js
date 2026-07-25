@@ -38,6 +38,7 @@ class Game {
     this.turn = 1;
     this.nextShipId = 1;
     this.messages = [];   // messages for the human player, cleared each turn
+    this.events = [];     // {type, starId} for the renderer, cleared each turn
     this.winner = null;
     this.makeGalaxy();
     this.makePlayers(numPlayers);
@@ -258,6 +259,7 @@ class Game {
 
   endTurn() {
     this.messages = [];
+    this.events = [];
     for (const p of this.players) {
       if (!p.alive) continue;
       this.collectAndSpend(p);
@@ -358,6 +360,7 @@ class Game {
       this.ships = this.ships.filter((sh) => sh.hp > 0);
       const survivors = this.ships.filter((sh) => sh.at === star.id);
       const humanInvolved = owners.includes(0);
+      this.events.push({ type: 'battle', starId: star.id, losses: dead.length });
       if (humanInvolved) {
         const myLost = dead.filter((sh) => sh.owner === 0).length;
         const theirLost = dead.length - myLost;
@@ -384,6 +387,7 @@ class Game {
         if (atk > 0) {
           const kill = Math.min(star.pop, atk * E.bombardPopKill / 10);
           star.pop -= kill;
+          this.events.push({ type: 'bombard', starId: star.id });
           if (star.owner === 0 || owners[0] === 0) {
             this.messages.push(
               `${this.players[owners[0]].name === 'You' ? 'Your fleet is bombarding' :
@@ -413,6 +417,7 @@ class Game {
           star.owner = p.id;
           star.pop = 10;
           this.ships = this.ships.filter((sh) => sh !== colony);
+          this.events.push({ type: 'colony', starId: star.id, owner: p.id });
           if (p.id === 0) this.messages.push(`Colony established at ${star.name}!`);
         }
       }
