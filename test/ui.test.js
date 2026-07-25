@@ -8,16 +8,30 @@ const path = require('path');
 // Test the shipped single-file build, regenerating it from the sources first.
 require('../build.js').build();
 
+// jsdom has no 2D context, so stand in for the parts the renderer touches:
+// drawing calls are no-ops, but gradients and text metrics must return real
+// objects or the paint path throws.
 function stubCanvas(window) {
   const noop = () => {};
+  const gradient = () => ({ addColorStop: noop });
+  const returns = {
+    createLinearGradient: gradient,
+    createRadialGradient: gradient,
+    createConicGradient: gradient,
+    createPattern: () => ({}),
+    measureText: (t) => ({ width: String(t).length * 6.5 }),
+    getImageData: () => ({ data: new Uint8ClampedArray(4) }),
+  };
   const ctx = new Proxy({}, {
     get(t, prop) {
       if (prop === 'canvas') return null;
+      if (Object.prototype.hasOwnProperty.call(returns, prop)) return returns[prop];
       return noop;
     },
     set() { return true; },
   });
   window.HTMLCanvasElement.prototype.getContext = () => ctx;
+  window.__SPACEHO_SEED = 42;   // deterministic galaxy for a repeatable run
 }
 
 function assert(cond, msg) {
@@ -85,11 +99,31 @@ function run(window) {
   document.getElementById('send-ships').click();
   assert(UI.sendMode, 'send mode armed');
 
-  // Play 40 turns through the real Ho! button (AI plays its side).
+  // Play up to 40 turns through the real Ho! button (AI plays its side).
+  // The run stops early only if the game genuinely ended — a won game or a
+  // dead player must not keep accepting turns.
   const ho = document.getElementById('ho-button');
-  for (let i = 0; i < 40 && !game.winner; i++) ho.click();
-  assert(game.turn > 40, 'turns advanced via Ho! button: turn ' + game.turn);
+  const startTurn = game.turn;
+  let clicks = 0;
+  while (clicks < 40 && !game.winner && game.players[0].alive) { ho.click(); clicks++; }
+  assert(clicks > 0, 'at least one turn played');
+  assert(game.turn === startTurn + clicks,
+    `each Ho! click advanced exactly one turn (${clicks} clicks, turn ${game.turn})`);
+  assert(clicks === 40 || game.winner || !game.players[0].alive,
+    'stopped early only when the game ended');
   assert(document.getElementById('messages').children.length > 0, 'reports rendered');
+
+  // Ho! is inert once the game is over, and the overlay is up.
+  if (game.winner || !game.players[0].alive) {
+    const frozen = game.turn;
+    ho.click();
+    assert(game.turn === frozen, 'Ho! does nothing after the game ends');
+    assert(document.getElementById('gameover').style.display === 'flex', 'game over overlay shown');
+  }
+
+  // Empire standings panel renders a row per empire.
+  assert(document.querySelectorAll('#empires .empire').length === game.players.length,
+    'empire standings rendered');
 
   // Selecting an unexplored star shows the unexplored notice.
   const unknown = game.stars.find((s) => !game.players[0].known[s.id]);

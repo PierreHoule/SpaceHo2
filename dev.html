@@ -10,7 +10,7 @@
   <header>
     <h1>🤠 SpaceHo!</h1>
     <div id="status"></div>
-    <button id="ho-button" title="End turn">Ho!</button>
+    <button id="ho-button" title="End turn (Enter)">Ho!</button>
   </header>
 
   <main>
@@ -21,6 +21,7 @@
     <aside id="sidebar">
       <section id="planet"></section>
       <section id="tech"></section>
+      <section id="empires"></section>
       <section id="reports">
         <h2>Reports</h2>
         <div id="messages"></div>
@@ -30,7 +31,9 @@
         <p>Grow colonies, terraform worlds toward your ideal temperature, mine
         metal, fund research, and build fleets. Send a colony ship to an
         uninhabited star to settle it; send warships to bombard enemy worlds.
-        Eliminate every rival empire to win. Press <b>Ho!</b> to end your turn.</p>
+        Eliminate every rival empire to win.<br><br>
+        <kbd>Enter</kbd> ends your turn · <kbd>Esc</kbd> cancels a fleet order ·
+        right-click the map to cancel targeting.</p>
       </section>
     </aside>
   </main>
@@ -38,6 +41,7 @@
   <div id="gameover">
     <div class="panel">
       <h1></h1>
+      <p></p>
       <button id="new-game">New Game</button>
     </div>
   </div>

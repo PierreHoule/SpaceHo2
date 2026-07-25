@@ -10,6 +10,9 @@ that single file is enough.
 
 You command the blue empire against three AI rivals. Last empire standing wins.
 
+Press **Ho!** (or <kbd>Enter</kbd>) to end your turn, <kbd>Esc</kbd> to cancel a
+fleet order. Add `#seed=1234` to the URL to replay a specific galaxy.
+
 ## How it works
 
 - **Planets** have a temperature, gravity, and metal reserves. How well your
@@ -28,7 +31,25 @@ You command the blue empire against three AI rivals. Last empire standing wins.
   orbiting an undefended enemy world bombard its population.
 - **Fog of war**: you only see live data where you have a planet or ship;
   everywhere else you see the last survey (dashed rings on the map).
-- Press **Ho!** to end your turn.
+
+## The map
+
+The star map is drawn on an animated canvas that scales to the window at
+device resolution. Its visual language:
+
+- **Points of light** are systems you have not surveyed yet — you can see the
+  star, but nothing about its world.
+- **Lit spheres** are surveyed planets, shaded by temperature: icy blues
+  through temperate greens to molten reds, with polar caps on cold worlds and
+  city lights on the night side of populated ones.
+- **A coloured ring** marks the owning empire — solid where you have live
+  intelligence, dashed where you are going on an old survey. The ring sits on
+  top of the planet's own glow so a red empire on a hot world still reads as
+  owned.
+- Your worlds wear the traditional hat. Chevrons beside a planet count the
+  ships parked there.
+- Fleets you have dispatched glide along dashed courses with engine trails;
+  battles, bombardments and new colonies burst on the map as they happen.
 
 ## Development
 
